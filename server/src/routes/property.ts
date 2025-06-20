@@ -1,8 +1,8 @@
 import express from 'express';
-import { 
-  getAllProperties, 
-  getProperty, 
-  registerProperty, 
+import {
+  getAllProperties,
+  getPropertyById,
+  registerProperty,
   transferProperty,
   uploadDocument,
   // Add new imports for multi-sig functions
@@ -17,7 +17,7 @@ const router = express.Router();
 
 // Existing routes
 router.get('/', getAllProperties);
-router.get('/:propertyId', getProperty);
+router.get('/:propertyId', getPropertyById);
 router.post('/', authenticate, registerProperty);
 router.post('/transfer', authenticate, transferProperty);
 router.post('/:propertyId/documents', authenticate, uploadDocument);
