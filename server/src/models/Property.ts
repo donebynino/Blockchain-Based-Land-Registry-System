@@ -24,6 +24,15 @@ export interface IProperty extends Document {
     url: string;
     uploadDate: Date;
   }>;
+  pendingTransfer?: {
+    newOwner: string;
+    requiredSigners: string[];
+    providedSignatures: string[];
+    expirationBlocks: number;
+    initiatedBy: string;
+    initiatedAt: Date;
+    blockchainTxId: string;
+  };
   metadata: Record<string, any>;
 }
 
@@ -55,6 +64,15 @@ const PropertySchema: Schema = new Schema({
     url: { type: String, required: true },
     uploadDate: { type: Date, default: Date.now }
   }],
+  pendingTransfer: {
+    newOwner: { type: String },
+    requiredSigners: [{ type: String }],
+    providedSignatures: [{ type: String }],
+    expirationBlocks: { type: Number },
+    initiatedBy: { type: String },
+    initiatedAt: { type: Date },
+    blockchainTxId: { type: String }
+  },
   metadata: { type: Map, of: Schema.Types.Mixed }
 }, { timestamps: true });
 

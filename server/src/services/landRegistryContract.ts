@@ -1,11 +1,12 @@
-import { 
-  callReadOnlyFunction, 
-  makeContractCall, 
+import {
+  callReadOnlyFunction,
+  makeContractCall,
   cvToValue,
   standardPrincipalCV,
   stringAsciiCV,
   stringUtf8CV,
-  uintCV
+  uintCV,
+  listCV
 } from '@stacks/transactions';
 import { StacksMainnet, StacksTestnet } from '@stacks/network';
 import { StacksApiClient } from './stacksApiClient';
@@ -91,7 +92,7 @@ export class LandRegistryContract {
         network: this.network,
         // Additional options would be set here
       };
-      
+
       // Mock transaction result
       return {
         txId: `mock-tx-${Date.now()}`,
@@ -99,6 +100,140 @@ export class LandRegistryContract {
       };
     } catch (error) {
       console.error('Error transferring property on blockchain:', error);
+      throw error;
+    }
+  }
+
+  async initiateMultiSigTransfer(
+    propertyId: string,
+    newOwnerAddress: string,
+    requiredSigners: string[],
+    expirationBlocks: number
+  ) {
+    try {
+      const txOptions = {
+        contractAddress: this.contractAddress,
+        contractName: this.contractName,
+        functionName: 'initiate-multi-sig-transfer',
+        functionArgs: [
+          stringAsciiCV(propertyId),
+          standardPrincipalCV(newOwnerAddress),
+          listCV(requiredSigners.map(signer => standardPrincipalCV(signer))),
+          uintCV(expirationBlocks)
+        ],
+        network: this.network,
+      };
+
+      return {
+        txId: `mock-tx-${Date.now()}`,
+        status: 'pending'
+      };
+    } catch (error) {
+      console.error('Error initiating multi-sig transfer on blockchain:', error);
+      throw error;
+    }
+  }
+
+  async signTransfer(propertyId: string) {
+    try {
+      const txOptions = {
+        contractAddress: this.contractAddress,
+        contractName: this.contractName,
+        functionName: 'sign-transfer',
+        functionArgs: [stringAsciiCV(propertyId)],
+        network: this.network,
+      };
+
+      return {
+        txId: `mock-tx-${Date.now()}`,
+        status: 'pending'
+      };
+    } catch (error) {
+      console.error('Error signing transfer on blockchain:', error);
+      throw error;
+    }
+  }
+
+  async cancelTransfer(propertyId: string) {
+    try {
+      const txOptions = {
+        contractAddress: this.contractAddress,
+        contractName: this.contractName,
+        functionName: 'cancel-transfer',
+        functionArgs: [stringAsciiCV(propertyId)],
+        network: this.network,
+      };
+
+      return {
+        txId: `mock-tx-${Date.now()}`,
+        status: 'pending'
+      };
+    } catch (error) {
+      console.error('Error canceling transfer on blockchain:', error);
+      throw error;
+    }
+  }
+
+  async addPropertyValuation(
+    propertyId: string,
+    appraisedValue: number,
+    appraiserAddress: string,
+    valuationType: string,
+    currency: string
+  ) {
+    try {
+      const txOptions = {
+        contractAddress: this.contractAddress,
+        contractName: this.contractName,
+        functionName: 'add-property-valuation',
+        functionArgs: [
+          stringAsciiCV(propertyId),
+          uintCV(appraisedValue),
+          standardPrincipalCV(appraiserAddress),
+          stringAsciiCV(valuationType),
+          stringAsciiCV(currency)
+        ],
+        network: this.network,
+      };
+
+      return {
+        txId: `mock-tx-${Date.now()}`,
+        status: 'pending'
+      };
+    } catch (error) {
+      console.error('Error adding property valuation on blockchain:', error);
+      throw error;
+    }
+  }
+
+  async addPropertyLien(
+    propertyId: string,
+    lienId: string,
+    lienHolderAddress: string,
+    amount: number,
+    lienType: string
+  ) {
+    try {
+      const txOptions = {
+        contractAddress: this.contractAddress,
+        contractName: this.contractName,
+        functionName: 'add-property-lien',
+        functionArgs: [
+          stringAsciiCV(propertyId),
+          stringAsciiCV(lienId),
+          standardPrincipalCV(lienHolderAddress),
+          uintCV(amount),
+          stringAsciiCV(lienType)
+        ],
+        network: this.network,
+      };
+
+      return {
+        txId: `mock-tx-${Date.now()}`,
+        status: 'pending'
+      };
+    } catch (error) {
+      console.error('Error adding property lien on blockchain:', error);
       throw error;
     }
   }
